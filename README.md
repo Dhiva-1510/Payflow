@@ -17,16 +17,15 @@ payflow/
 │   ├── package.json        # Backend dependencies
 │   └── jest.config.js      # Jest configuration
 ├── frontend/payroll-frontend/  # React frontend (PayFlow UI)
-│   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Page components
-│   │   ├── services/       # API services
-│   │   ├── utils/          # Utility functions
-│   │   └── hooks/          # Custom React hooks
-│   ├── package.json        # Frontend dependencies
-│   ├── tailwind.config.js  # Tailwind CSS configuration
-│   └── jest.config.js      # Jest configuration
-└── .kiro/specs/            # Project specifications
+    ├── src/
+    │   ├── components/     # React components
+    │   ├── pages/          # Page components
+    │   ├── services/       # API services
+    │   ├── utils/          # Utility functions
+    │   └── hooks/          # Custom React hooks
+    ├── package.json        # Frontend dependencies
+    ├── tailwind.config.js  # Tailwind CSS configuration
+    └── jest.config.js      # Jest configuration
 ```
 
 ## Technology Stack
