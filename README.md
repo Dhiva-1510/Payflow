@@ -126,13 +126,5 @@ npm test
 npm run test:watch
 ```
 
-## Development Workflow
 
-This project follows a spec-driven development approach:
-
-1. **Requirements** - Defined in `.kiro/specs/employee-payroll-system/requirements.md`
-2. **Design** - Detailed in `.kiro/specs/employee-payroll-system/design.md`
-3. **Tasks** - Implementation plan in `.kiro/specs/employee-payroll-system/tasks.md`
-
-Each task builds incrementally on the previous ones, ensuring a solid foundation and comprehensive testing coverage.
 
