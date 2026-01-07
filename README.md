@@ -41,7 +41,7 @@ payflow/
 - **fast-check** - Property-based testing
 
 ### Frontend
-- **React 19** - UI library
+- **React 18** - UI library
 - **Vite** - Build tool
 - **Tailwind CSS** - Styling
 - **Axios** - HTTP client
