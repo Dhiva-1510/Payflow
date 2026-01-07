@@ -54,8 +54,8 @@ payflow/
 
 ### Prerequisites
 - Node.js (v18 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn
+- MongoDB (local)
+- npm 
 
 ### Backend Setup
 ```bash
