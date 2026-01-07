@@ -136,6 +136,3 @@ This project follows a spec-driven development approach:
 
 Each task builds incrementally on the previous ones, ensuring a solid foundation and comprehensive testing coverage.
 
-## License
-
-This project is licensed under the ISC License.
