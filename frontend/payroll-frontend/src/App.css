@@ -1,0 +1,5 @@
+/* Reset default Vite styles - allow full width */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
