@@ -5,6 +5,7 @@ import ErrorMessage from './ErrorMessage';
 import PayslipView from './PayslipView';
 import RetryIndicator from './RetryIndicator';
 import { useSettings } from '../context/SettingsContext';
+import { generatePayslipPDF } from '../utils/pdfGenerator';
 
 /**
  * EmployeePayrollHistory Component
@@ -27,6 +28,7 @@ const EmployeePayrollHistory = () => {
   const [selectedPayslip, setSelectedPayslip] = useState(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const [downloadingPDF, setDownloadingPDF] = useState(null); // Track which payslip is being downloaded
 
   useEffect(() => {
     fetchPayrollHistory();
@@ -79,6 +81,18 @@ const EmployeePayrollHistory = () => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  const handleDownloadPDF = async (payslip) => {
+    try {
+      setDownloadingPDF(payslip._id);
+      await generatePayslipPDF(payslip, formatCurrency);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setDownloadingPDF(null);
+    }
   };
 
   // Calculate summary statistics
@@ -232,12 +246,28 @@ const EmployeePayrollHistory = () => {
                       {formatCurrency(record.netSalary)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <button
-                        onClick={() => setSelectedPayslip(record)}
-                        className="px-3 py-1.5 text-xs font-medium text-[#5DD62C] bg-[#5DD62C]/10 hover:bg-[#5DD62C]/20 rounded-lg transition-colors"
-                      >
-                        View Details
-                      </button>
+                      <div className="flex items-center justify-center space-x-2">
+                        <button
+                          onClick={() => setSelectedPayslip(record)}
+                          className="px-3 py-1.5 text-xs font-medium text-[#5DD62C] bg-[#5DD62C]/10 hover:bg-[#5DD62C]/20 rounded-lg transition-colors"
+                        >
+                          View Details
+                        </button>
+                        <button
+                          onClick={() => handleDownloadPDF(record)}
+                          disabled={downloadingPDF === record._id}
+                          className="px-3 py-1.5 text-xs font-medium text-[#F8F8F8] bg-[#0F0F0F] hover:bg-[#2A2A2A] border border-[#FFFFFF]/10 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Download PDF"
+                        >
+                          {downloadingPDF === record._id ? (
+                            <div className="animate-spin rounded-full h-3 w-3 border-b border-[#F8F8F8]"></div>
+                          ) : (
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

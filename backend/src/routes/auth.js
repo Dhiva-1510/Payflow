@@ -257,7 +257,7 @@ router.get('/settings', authenticateToken, async (req, res) => {
     // For now, return default settings
     // In a real app, you might store these in a separate UserSettings model
     const defaultSettings = {
-      currency: 'USD',
+      currency: 'INR',
       theme: 'dark',
       language: 'en',
       timezone: 'UTC',

@@ -208,23 +208,23 @@ input:-webkit-autofill:active {
 
 /* Enhanced button styles */
 .btn-primary {
-  @apply px-6 py-3 text-sm font-medium text-[#0F0F0F] bg-gradient-to-r from-[#5DD62C] to-[#337418] hover:from-[#337418] hover:to-[#5DD62C] rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl hover:shadow-[#5DD62C]/20;
+  @apply px-6 py-3 text-sm font-medium text-[#0F0F0F] bg-gradient-to-r from-[#5DD62C] to-[#337418] hover:from-[#337418] hover:to-[#5DD62C] rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl hover:shadow-[#5DD62C]/20 flex items-center;
 }
 
 .btn-secondary {
-  @apply px-6 py-3 text-sm font-medium text-[#F8F8F8] bg-[#202020] hover:bg-[#2A2A2A] border border-[#FFFFFF]/10 hover:border-[#5DD62C]/30 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] hover:shadow-md;
+  @apply px-6 py-3 text-sm font-medium text-[#F8F8F8] bg-[#202020] hover:bg-[#2A2A2A] border border-[#FFFFFF]/10 hover:border-[#5DD62C]/30 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] hover:shadow-md flex items-center;
 }
 
 .btn-ghost {
-  @apply px-6 py-3 text-sm font-medium text-[#F8F8F8]/80 hover:text-[#F8F8F8] hover:bg-[#FFFFFF]/5 rounded-lg transition-all duration-200 hover:shadow-sm;
+  @apply px-6 py-3 text-sm font-medium text-[#F8F8F8]/80 hover:text-[#F8F8F8] hover:bg-[#FFFFFF]/5 rounded-lg transition-all duration-200 hover:shadow-sm flex items-center;
 }
 
 .btn-danger {
-  @apply px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl hover:shadow-red-500/20;
+  @apply px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl hover:shadow-red-500/20 flex items-center;
 }
 
 .btn-success {
-  @apply px-6 py-3 text-sm font-medium text-[#0F0F0F] bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl hover:shadow-green-400/20;
+  @apply px-6 py-3 text-sm font-medium text-[#0F0F0F] bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl hover:shadow-green-400/20 flex items-center;
 }
 
 /* Enhanced card styles */
@@ -283,6 +283,42 @@ input:-webkit-autofill:active {
   @apply hover:bg-[#0F0F0F]/50 transition-colors duration-150;
 }
 
+/* Responsive table column widths for better alignment */
+.table-col-employee {
+  @apply w-[35%] min-w-[200px] max-w-[300px];
+}
+
+.table-col-currency {
+  @apply w-[12%] min-w-[100px] max-w-[110px];
+}
+
+.table-col-actions {
+  @apply w-[8%] min-w-[70px] max-w-[80px];
+}
+
+/* Mobile responsive table adjustments */
+@media (max-width: 768px) {
+  .table-col-employee {
+    @apply w-[40%] min-w-[150px] max-w-[200px];
+  }
+  
+  .table-col-currency {
+    @apply w-[14%] min-w-[80px] max-w-[90px];
+  }
+  
+  .table-col-actions {
+    @apply w-[10%] min-w-[60px] max-w-[70px];
+  }
+  
+  .table-header {
+    @apply px-3 py-3 text-xs;
+  }
+  
+  .table-cell {
+    @apply px-3 py-3 text-xs;
+  }
+}
+
 /* Enhanced navigation styles */
 .nav-link {
   @apply flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200;
@@ -296,7 +332,7 @@ input:-webkit-autofill:active {
   @apply text-[#F8F8F8]/60 hover:text-[#F8F8F8] hover:bg-[#0F0F0F]/50 hover:shadow-md;
 }
 
-/* Enhanced form styles */
+/* Enhanced form styles with state management */
 .form-group {
   @apply space-y-2;
 }
@@ -309,8 +345,63 @@ input:-webkit-autofill:active {
   @apply text-sm text-red-400 mt-1;
 }
 
+.form-success {
+  @apply text-sm text-green-400 mt-1;
+}
+
 .form-help {
   @apply text-xs text-[#F8F8F8]/60 mt-1;
+}
+
+/* Enhanced form validation states */
+.form-group.has-error .form-label {
+  @apply text-red-400;
+}
+
+.form-group.has-success .form-label {
+  @apply text-green-400;
+}
+
+.form-group.is-disabled .form-label {
+  @apply text-[#F8F8F8]/40;
+}
+
+/* Input group wrapper for better state management */
+.input-group {
+  @apply relative;
+}
+
+.input-group.has-icon {
+  @apply relative;
+}
+
+.input-group.has-icon .input-field {
+  @apply pl-12;
+}
+
+.input-group.has-currency .input-field {
+  @apply pl-10;
+}
+
+/* State indicators for input groups */
+.input-group.is-focused .input-icon,
+.input-group.is-focused .input-currency-symbol {
+  @apply text-[#5DD62C]/60;
+}
+
+.input-group.has-error .input-icon,
+.input-group.has-error .input-currency-symbol {
+  @apply text-red-400/60;
+}
+
+.input-group.has-success .input-icon,
+.input-group.has-success .input-currency-symbol {
+  @apply text-green-400/60;
+}
+
+.input-group.is-disabled .input-icon,
+.input-group.is-disabled .input-currency-symbol {
+  @apply text-[#F8F8F8]/20 opacity-50;
 }
 
 /* Enhanced loading styles */
@@ -346,4 +437,550 @@ input:-webkit-autofill:active {
 
 .notification-exit-active {
   @apply transform translate-x-full opacity-0 transition-all duration-300 ease-in;
+}
+
+/* MetricsGrid responsive layout styles */
+.metrics-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+  
+  /* Mobile: Single column */
+  grid-template-columns: 1fr;
+  
+  /* Tablet: Two columns */
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Desktop: Three columns */
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Large desktop: Maintain three columns with max width */
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(3, minmax(0, 400px));
+    justify-content: start;
+  }
+}
+
+/* Ensure grid items have consistent height */
+.metrics-grid > * {
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animation for grid items */
+.metrics-grid > * {
+  animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Stagger animation for multiple items */
+.metrics-grid > *:nth-child(1) { animation-delay: 0ms; }
+.metrics-grid > *:nth-child(2) { animation-delay: 100ms; }
+.metrics-grid > *:nth-child(3) { animation-delay: 200ms; }
+.metrics-grid > *:nth-child(4) { animation-delay: 300ms; }
+.metrics-grid > *:nth-child(5) { animation-delay: 400ms; }
+.metrics-grid > *:nth-child(6) { animation-delay: 500ms; }
+
+/* Enhanced input field utility classes with state management */
+
+/* Base input field classes with flexible padding for icons */
+.input-with-icon {
+  padding-left: calc(2.5rem + 0.5rem); /* Icon width (2.5rem) + spacing (0.5rem) */
+  padding-right: 1rem;
+  position: relative;
+}
+
+.input-with-currency {
+  padding-left: calc(1.5rem + 0.5rem); /* Currency symbol width (1.5rem) + spacing (0.5rem) */
+  padding-right: 1rem;
+  position: relative;
+}
+
+/* Enhanced input field base styling */
+.input-field-enhanced {
+  @apply w-full px-4 py-3 bg-[#0F0F0F] border border-[#FFFFFF]/10 rounded-lg text-[#F8F8F8] placeholder-[#F8F8F8]/40 transition-all duration-200;
+}
+
+/* State-aware input field classes */
+.input-field-with-states {
+  @apply input-field-enhanced;
+}
+
+.input-field-with-states:focus {
+  @apply border-[#5DD62C]/50 ring-2 ring-[#5DD62C]/20 shadow-lg shadow-[#5DD62C]/10;
+  background-color: rgba(15, 15, 15, 0.95);
+}
+
+.input-field-with-states:hover:not(:disabled):not(:focus) {
+  @apply border-[#FFFFFF]/20;
+  background-color: rgba(15, 15, 15, 0.98);
+}
+
+.input-field-with-states:disabled {
+  @apply opacity-50 cursor-not-allowed;
+  background-color: rgba(15, 15, 15, 0.3);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: rgba(248, 248, 248, 0.4);
+}
+
+.input-field-with-states.error {
+  @apply border-red-500/50;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.input-field-with-states.error:focus {
+  @apply border-red-500;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.input-field-with-states.success {
+  @apply border-green-500/50;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  background-color: rgba(34, 197, 94, 0.05);
+}
+
+.input-field-with-states.success:focus {
+  @apply border-green-500;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+}
+
+/* Combined classes for inputs with icons and states */
+.input-with-icon.input-field-with-states,
+.input-with-currency.input-field-with-states {
+  /* Inherit all state styling while maintaining padding */
+}
+
+/* Icon positioning within input containers */
+.input-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: rgba(248, 248, 248, 0.4);
+}
+
+.input-currency-symbol {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+  font-size: 0.875rem;
+  color: rgba(248, 248, 248, 0.4);
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 640px) {
+  .input-with-icon {
+    padding-left: calc(2rem + 0.5rem); /* Smaller icon on mobile */
+  }
+  
+  .input-with-currency {
+    padding-left: calc(1.25rem + 0.5rem); /* Smaller currency symbol on mobile */
+  }
+  
+  .input-icon {
+    width: 1rem;
+    height: 1rem;
+    left: 0.75rem;
+  }
+  
+  .input-currency-symbol {
+    left: 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet responsive adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .input-with-icon {
+    padding-left: calc(2.25rem + 0.5rem);
+  }
+  
+  .input-with-currency {
+    padding-left: calc(1.375rem + 0.5rem);
+  }
+}
+
+/* Enhanced state-specific styling that maintains spacing calculations */
+
+/* Focus states - Requirements 5.1 */
+.input-with-icon:focus,
+.input-with-currency:focus {
+  /* Focus styles don't affect padding calculations */
+  border-color: rgba(93, 214, 44, 0.5);
+  box-shadow: 0 0 0 2px rgba(93, 214, 44, 0.2);
+  background-color: rgba(15, 15, 15, 0.95);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus state for icons/symbols - maintain visibility */
+.input-with-icon:focus + .input-icon,
+.input-with-currency:focus + .input-currency-symbol {
+  color: rgba(93, 214, 44, 0.6);
+  transition: color 0.2s ease-in-out;
+}
+
+/* Hover states - Requirements 5.4 */
+.input-with-icon:hover:not(:disabled):not(:focus),
+.input-with-currency:hover:not(:disabled):not(:focus) {
+  /* Hover styles don't affect padding calculations */
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(15, 15, 15, 0.98);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover state for icons/symbols */
+.input-with-icon:hover:not(:disabled) + .input-icon,
+.input-with-currency:hover:not(:disabled) + .input-currency-symbol {
+  color: rgba(248, 248, 248, 0.6);
+  transition: color 0.2s ease-in-out;
+}
+
+/* Disabled states - Requirements 5.3 */
+.input-with-icon:disabled,
+.input-with-currency:disabled {
+  /* Disabled styles don't affect padding calculations */
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(15, 15, 15, 0.3);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: rgba(248, 248, 248, 0.4);
+}
+
+/* Disabled state for icons/symbols */
+.input-with-icon:disabled + .input-icon,
+.input-with-currency:disabled + .input-currency-symbol {
+  color: rgba(248, 248, 248, 0.2);
+  opacity: 0.5;
+}
+
+/* Error states - Requirements 5.2 */
+.input-with-icon.input-error,
+.input-with-currency.input-error {
+  /* Error styles don't affect padding calculations */
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  background-color: rgba(239, 68, 68, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Error state for icons/symbols */
+.input-with-icon.input-error + .input-icon,
+.input-with-currency.input-error + .input-currency-symbol {
+  color: rgba(239, 68, 68, 0.6);
+}
+
+/* Success states - for validation feedback */
+.input-with-icon.input-success,
+.input-with-currency.input-success {
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  background-color: rgba(34, 197, 94, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Success state for icons/symbols */
+.input-with-icon.input-success + .input-icon,
+.input-with-currency.input-success + .input-currency-symbol {
+  color: rgba(34, 197, 94, 0.6);
+}
+
+/* Combined state handling - focus takes precedence over error */
+.input-with-icon.input-error:focus,
+.input-with-currency.input-error:focus {
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+/* Loading state for inputs */
+.input-with-icon.input-loading,
+.input-with-currency.input-loading {
+  background-image: linear-gradient(
+    90deg,
+    rgba(248, 248, 248, 0.05) 0%,
+    rgba(248, 248, 248, 0.1) 50%,
+    rgba(248, 248, 248, 0.05) 100%
+  );
+  background-size: 200px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Ensure all state transitions are smooth */
+.input-with-icon,
+.input-with-currency,
+.input-icon,
+.input-currency-symbol {
+  transition: all 0.2s ease-in-out;
+}
+
+/* State-specific container styling */
+.input-icon-container.focus-within .input-icon,
+.input-icon-container.focus-within .input-currency-symbol {
+  color: rgba(93, 214, 44, 0.6);
+}
+
+.input-icon-container.error .input-icon,
+.input-icon-container.error .input-currency-symbol {
+  color: rgba(239, 68, 68, 0.6);
+}
+
+.input-icon-container.success .input-icon,
+.input-icon-container.success .input-currency-symbol {
+  color: rgba(34, 197, 94, 0.6);
+}
+
+.input-icon-container.disabled .input-icon,
+.input-icon-container.disabled .input-currency-symbol {
+  color: rgba(248, 248, 248, 0.2);
+  opacity: 0.5;
+}
+
+/* Enhanced mobile-specific responsive behavior for input fields */
+
+/* Mobile-first approach with touch target adequacy - Requirements 4.3 */
+@media (max-width: 640px) {
+  /* Ensure minimum touch target size of 44px on mobile - Requirements 4.3 */
+  .input-with-icon,
+  .input-with-currency,
+  .input-field-enhanced,
+  .input-field-with-states {
+    min-height: 44px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1rem; /* Prevent zoom on iOS */
+  }
+  
+  /* Adjust icon and currency symbol positioning for mobile */
+  .input-with-icon {
+    padding-left: calc(2rem + 0.5rem); /* Smaller icon on mobile */
+  }
+  
+  .input-with-currency {
+    padding-left: calc(1.25rem + 0.5rem); /* Smaller currency symbol on mobile */
+  }
+  
+  .input-icon {
+    width: 1rem;
+    height: 1rem;
+    left: 0.75rem;
+  }
+  
+  .input-currency-symbol {
+    left: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Mobile-specific button styling for touch targets */
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger,
+  .btn-success {
+    min-height: 44px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  /* Mobile form layout adjustments */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Ensure proper spacing between form elements on mobile */
+  .grid.grid-cols-1.md\\:grid-cols-3 {
+    gap: 1rem;
+  }
+  
+  /* Mobile-specific select styling */
+  select {
+    min-height: 44px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  /* Prevent horizontal scrolling on mobile - Requirements 4.1 */
+  .input-with-icon,
+  .input-with-currency {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Mobile-specific focus states with larger touch areas */
+  .input-with-icon:focus,
+  .input-with-currency:focus {
+    /* Larger focus ring for better visibility on mobile */
+    box-shadow: 0 0 0 3px rgba(93, 214, 44, 0.2);
+  }
+}
+
+/* Tablet responsive adjustments - Requirements 4.2 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .input-with-icon {
+    padding-left: calc(2.25rem + 0.5rem);
+    min-height: 48px;
+  }
+  
+  .input-with-currency {
+    padding-left: calc(1.375rem + 0.5rem);
+    min-height: 48px;
+  }
+  
+  .input-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    left: 0.875rem;
+  }
+  
+  .input-currency-symbol {
+    left: 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Large screen optimizations - Requirements 4.4, 4.5 */
+@media (min-width: 1025px) {
+  .input-with-icon {
+    padding-left: calc(2.5rem + 0.5rem);
+    min-height: 48px;
+  }
+  
+  .input-with-currency {
+    padding-left: calc(1.5rem + 0.5rem);
+    min-height: 48px;
+  }
+  
+  .input-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    left: 1rem;
+  }
+  
+  .input-currency-symbol {
+    left: 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Orientation change handling - Requirements 4.5 */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Compact layout for landscape mobile */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .input-with-icon,
+  .input-with-currency {
+    min-height: 40px;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    min-height: 40px;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+}
+
+/* High DPI display adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .input-icon,
+  .input-currency-symbol {
+    /* Sharper rendering on high DPI displays */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Accessibility enhancements for mobile */
+@media (prefers-reduced-motion: reduce) {
+  .input-with-icon,
+  .input-with-currency,
+  .input-icon,
+  .input-currency-symbol {
+    transition: none;
+  }
+}
+
+/* Enhanced touch interaction feedback */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device specific styles */
+  .input-with-icon:active,
+  .input-with-currency:active {
+    background-color: rgba(15, 15, 15, 0.9);
+    transform: scale(0.995);
+  }
+  
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Ensure text doesn't get hidden behind icons on small screens - Requirements 4.4 */
+@media (max-width: 320px) {
+  /* Extra small screens (iPhone SE, etc.) */
+  .input-with-icon {
+    padding-left: calc(1.75rem + 0.5rem);
+  }
+  
+  .input-with-currency {
+    padding-left: calc(1rem + 0.5rem);
+  }
+  
+  .input-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    left: 0.5rem;
+  }
+  
+  .input-currency-symbol {
+    left: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Container queries for responsive input behavior (when supported) */
+@container (max-width: 400px) {
+  .input-with-icon,
+  .input-with-currency {
+    font-size: 0.875rem;
+  }
+}
+
+/* Focus management for mobile accessibility */
+@media (max-width: 640px) {
+  /* Ensure focus is visible and accessible on mobile */
+  .input-with-icon:focus-visible,
+  .input-with-currency:focus-visible {
+    outline: 2px solid rgba(93, 214, 44, 0.8);
+    outline-offset: 2px;
+  }
+  
+  /* Improve button focus visibility on mobile */
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible {
+    outline: 2px solid rgba(93, 214, 44, 0.8);
+    outline-offset: 2px;
+  }
 }

@@ -57,6 +57,63 @@ router.get('/my-payroll', authenticateToken, async (req, res) => {
 });
 
 /**
+ * POST /api/payroll/run/:employeeId
+ * Run payroll processing for a specific employee (Admin only)
+ */
+router.post('/run/:employeeId', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const { month, year } = req.body;
+
+    // Validate required fields
+    if (!month || !year) {
+      return res.status(400).json({
+        success: false,
+        message: 'Month and year are required'
+      });
+    }
+
+    // Validate employeeId format
+    if (!employeeId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid employee ID format'
+      });
+    }
+
+    // Convert to numbers
+    const monthNum = parseInt(month);
+    const yearNum = parseInt(year);
+
+    // Process payroll for the specific employee
+    const payroll = await PayrollService.processEmployeePayroll(employeeId, monthNum, yearNum);
+
+    // Get employee details for response
+    const employee = await Employee.findById(employeeId).populate('userId');
+
+    res.status(200).json({
+      success: true,
+      message: `Payroll processed successfully for ${employee.userId.name}`,
+      data: {
+        employee: {
+          id: employee._id,
+          name: employee.userId.name,
+          email: employee.userId.email
+        },
+        payroll: payroll
+      }
+    });
+
+  } catch (error) {
+    console.error('Individual payroll processing error:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Internal server error during payroll processing'
+    });
+  }
+});
+
+/**
  * POST /api/payroll/run
  * Run payroll processing for all employees (Admin only)
  */

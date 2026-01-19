@@ -1,214 +1,172 @@
 import express from 'express';
-import Employee from '../models/Employee.js';
-import Payroll from '../models/Payroll.js';
-import User from '../models/User.js';
+import DashboardService from '../services/dashboardService.js';
 import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
 /**
- * GET /api/dashboard/stats
- * Get dashboard statistics for admin
+ * Error response helper
  */
-router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
+const sendErrorResponse = (res, error, statusCode = 500) => {
+  console.error('Dashboard API error:', error);
+  
+  // Determine if it's a validation error (400) or server error (500)
+  const isValidationError = error.message.includes('Month must be') || 
+                           error.message.includes('Year must be') ||
+                           error.message.includes('between');
+  
+  const status = isValidationError ? 400 : statusCode;
+  
+  res.status(status).json({
+    success: false,
+    error: {
+      code: 'DASHBOARD_ERROR',
+      message: error.message,
+      details: error.stack
+    },
+    timestamp: new Date()
+  });
+};
+
+/**
+ * GET /api/dashboard/metrics
+ * Get all dashboard metrics for the current or specified month/year
+ */
+router.get('/metrics', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    // Get total employees count
-    const totalEmployees = await Employee.countDocuments();
+    const { month, year } = req.query;
     
-    // Get all employees with their salary data
-    const employees = await Employee.find({});
-    const monthlyPayroll = employees.reduce((sum, emp) => sum + (emp.netSalary || 0), 0);
+    // Parse parameters if provided
+    const parsedMonth = month ? parseInt(month) : null;
+    const parsedYear = year ? parseInt(year) : null;
     
-    // Get last payroll run information
-    const lastPayrollRun = await Payroll.findOne()
-      .sort({ createdAt: -1 })
-      .populate('employeeId', 'userId')
-      .populate({
-        path: 'employeeId',
-        populate: {
-          path: 'userId',
-          select: 'name email'
-        }
-      });
-
-    // Get pending approvals count (for now, this is placeholder - could be leave requests, etc.)
-    const pendingApprovals = 0; // TODO: Implement approval system
-
-    // Get recent payroll runs (last 5)
-    const recentPayrollRuns = await Payroll.find()
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .populate('employeeId', 'userId')
-      .populate({
-        path: 'employeeId',
-        populate: {
-          path: 'userId',
-          select: 'name email'
-        }
-      });
-
+    const metrics = await DashboardService.getDashboardMetrics(parsedMonth, parsedYear);
+    
     res.json({
       success: true,
-      data: {
-        totalEmployees,
-        monthlyPayroll,
-        pendingApprovals,
-        lastPayrollRun: lastPayrollRun ? {
-          id: lastPayrollRun._id,
-          month: lastPayrollRun.month,
-          year: lastPayrollRun.year,
-          employeeName: lastPayrollRun.employeeId?.userId?.name || 'Unknown',
-          netSalary: lastPayrollRun.netSalary,
-          createdAt: lastPayrollRun.createdAt
-        } : null,
-        recentActivity: recentPayrollRuns.map(payroll => ({
-          id: payroll._id,
-          type: 'payroll_processed',
-          description: `Payroll processed for ${payroll.employeeId?.userId?.name || 'Unknown'}`,
-          amount: payroll.netSalary,
-          month: payroll.month,
-          year: payroll.year,
-          createdAt: payroll.createdAt
-        }))
-      }
+      data: metrics
     });
   } catch (error) {
-    console.error('Dashboard stats error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    });
+    sendErrorResponse(res, error);
   }
 });
 
 /**
- * GET /api/dashboard/payroll-summary
- * Get payroll summary by month/year
+ * GET /api/dashboard/payroll-total/:month/:year
+ * Get payroll total for a specific month and year
  */
-router.get('/payroll-summary', authenticateToken, requireAdmin, async (req, res) => {
+router.get('/payroll-total/:month/:year', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { year, month } = req.query;
+    const month = parseInt(req.params.month);
+    const year = parseInt(req.params.year);
     
-    // Build query
-    const query = {};
-    if (year) query.year = parseInt(year);
-    if (month) query.month = parseInt(month);
-
-    // Get payroll records with employee details
-    const payrollRecords = await Payroll.find(query)
-      .populate('employeeId', 'userId')
-      .populate({
-        path: 'employeeId',
-        populate: {
-          path: 'userId',
-          select: 'name email'
-        }
-      })
-      .sort({ createdAt: -1 });
-
-    // Calculate summary statistics
-    const totalAmount = payrollRecords.reduce((sum, record) => sum + record.netSalary, 0);
-    const totalEmployees = payrollRecords.length;
-    const averageSalary = totalEmployees > 0 ? totalAmount / totalEmployees : 0;
-
+    const payrollTotal = await DashboardService.getPayrollTotal(month, year);
+    
     res.json({
       success: true,
-      data: {
-        summary: {
-          totalAmount,
-          totalEmployees,
-          averageSalary,
-          period: { year: parseInt(year) || null, month: parseInt(month) || null }
-        },
-        records: payrollRecords.map(record => ({
-          id: record._id,
-          employeeName: record.employeeId?.userId?.name || 'Unknown',
-          employeeEmail: record.employeeId?.userId?.email || 'Unknown',
-          baseSalary: record.baseSalary,
-          allowance: record.allowance,
-          deduction: record.deduction,
-          grossSalary: record.grossSalary,
-          netSalary: record.netSalary,
-          month: record.month,
-          year: record.year,
-          createdAt: record.createdAt
-        }))
-      }
+      data: payrollTotal
     });
   } catch (error) {
-    console.error('Payroll summary error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
+    sendErrorResponse(res, error);
+  }
+});
+
+/**
+ * GET /api/dashboard/employees-paid/:month/:year
+ * Get count of employees paid in a specific month and year
+ */
+router.get('/employees-paid/:month/:year', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const month = parseInt(req.params.month);
+    const year = parseInt(req.params.year);
+    
+    const employeesPaid = await DashboardService.getEmployeesPaidCount(month, year);
+    
+    res.json({
+      success: true,
+      data: employeesPaid
     });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+});
+
+/**
+ * GET /api/dashboard/pending-approvals
+ * Get count of pending approval items
+ */
+router.get('/pending-approvals', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const pendingApprovals = await DashboardService.getPendingApprovalsCount();
+    
+    res.json({
+      success: true,
+      data: pendingApprovals
+    });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+});
+
+// Legacy endpoints for backward compatibility
+// These can be removed once frontend is updated to use new endpoints
+
+/**
+ * GET /api/dashboard/stats
+ * Legacy endpoint - provides dashboard statistics with recent activity
+ */
+router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const metrics = await DashboardService.getDashboardMetrics();
+    
+    // Get recent payroll activity (last 5 payroll records)
+    const recentActivity = await DashboardService.getRecentActivity(5);
+    
+    // Transform to legacy format for backward compatibility
+    const legacyResponse = {
+      totalEmployees: metrics.employeesPaid.totalEmployees,
+      monthlyPayroll: metrics.payrollTotal.amount,
+      pendingApprovals: metrics.pendingApprovals.count,
+      lastPayrollRun: {
+        month: metrics.payrollTotal.month,
+        year: metrics.payrollTotal.year
+      },
+      recentActivity: recentActivity
+    };
+    
+    res.json({
+      success: true,
+      data: legacyResponse
+    });
+  } catch (error) {
+    sendErrorResponse(res, error);
   }
 });
 
 /**
  * GET /api/dashboard/reports
- * Get various reports for admin
+ * Get dashboard reports data
  */
 router.get('/reports', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { type = 'monthly', year, month } = req.query;
+    const { type = 'monthly', year } = req.query;
+    const targetYear = year ? parseInt(year) : new Date().getFullYear();
     
-    let reportData = {};
-
     if (type === 'monthly') {
-      // Monthly payroll report
-      const currentYear = year ? parseInt(year) : new Date().getFullYear();
-      const monthlyData = [];
-
-      for (let m = 1; m <= 12; m++) {
-        const payrollRecords = await Payroll.find({ year: currentYear, month: m });
-        const totalAmount = payrollRecords.reduce((sum, record) => sum + record.netSalary, 0);
-        const employeeCount = payrollRecords.length;
-
-        monthlyData.push({
-          month: m,
-          monthName: new Date(currentYear, m - 1).toLocaleString('default', { month: 'long' }),
-          totalAmount,
-          employeeCount,
-          averageSalary: employeeCount > 0 ? totalAmount / employeeCount : 0
-        });
-      }
-
-      reportData = {
-        type: 'monthly',
-        year: currentYear,
-        data: monthlyData
-      };
-    } else if (type === 'employee') {
-      // Employee salary report
-      const employees = await Employee.find()
-        .populate('userId', 'name email')
-        .sort({ 'userId.name': 1 });
-
-      reportData = {
-        type: 'employee',
-        data: employees.map(emp => ({
-          id: emp._id,
-          name: emp.userId?.name || 'Unknown',
-          email: emp.userId?.email || 'Unknown',
-          baseSalary: emp.baseSalary,
-          allowance: emp.allowance,
-          deduction: emp.deduction,
-          grossSalary: emp.grossSalary,
-          netSalary: emp.netSalary
-        }))
-      };
+      const monthlyReport = await DashboardService.getMonthlyReport(targetYear);
+      
+      res.json({
+        success: true,
+        data: monthlyReport
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: 'Unsupported report type. Currently only "monthly" is supported.'
+      });
     }
-
-    res.json({
-      success: true,
-      data: reportData
-    });
   } catch (error) {
-    console.error('Reports error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    });
+    sendErrorResponse(res, error);
   }
 });
 

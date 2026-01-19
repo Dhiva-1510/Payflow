@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Actions Alignment Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0F0F0F;
+            color: #F8F8F8;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #202020;
+        }
+        
+        /* Button styles matching the updated CSS */
+        .btn-secondary {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #F8F8F8;
+            background-color: #202020;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2A2A2A;
+            border-color: rgba(93, 214, 44, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .justify-start {
+            justify-content: flex-start;
+        }
+        
+        .space-y-3 > * + * {
+            margin-top: 12px;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            color: #5DD62C;
+            flex-shrink: 0;
+        }
+        
+        .text {
+            flex: 1;
+        }
+        
+        /* Test cases */
+        .misaligned {
+            display: block !important; /* Force block display to show misalignment */
+        }
+        
+        .misaligned .icon {
+            display: inline-block;
+            vertical-align: top;
+        }
+        
+        .misaligned .text {
+            display: inline-block;
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quick Actions Alignment Test</h1>
+        
+        <div class="test-section">
+            <h2>✅ FIXED: Properly Aligned Quick Actions</h2>
+            <p>Icons and text should be perfectly centered vertically</p>
+            <div class="space-y-3">
+                <button class="btn-secondary justify-start">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    <span class="text">Add New Employee</span>
+                </button>
+                <button class="btn-secondary justify-start">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text">Run Payroll</span>
+                </button>
+                <button class="btn-secondary justify-start">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="text">View Reports</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>❌ BEFORE: Misaligned Quick Actions (for comparison)</h2>
+            <p>This shows how it looked before the fix - icons and text not aligned</p>
+            <div class="space-y-3">
+                <button class="btn-secondary justify-start misaligned">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    <span class="text">Add New Employee</span>
+                </button>
+                <button class="btn-secondary justify-start misaligned">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text">Run Payroll</span>
+                </button>
+                <button class="btn-secondary justify-start misaligned">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="text">View Reports</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Testing Instructions</h2>
+            <ul>
+                <li><strong>Visual Check:</strong> Compare the two sections above</li>
+                <li><strong>Fixed Version:</strong> Icons and text should be perfectly aligned in the center</li>
+                <li><strong>Before Version:</strong> Shows the misalignment issue that was present</li>
+                <li><strong>Hover Test:</strong> Hover over buttons to test interaction states</li>
+                <li><strong>Mobile Test:</strong> Resize window to test responsive behavior</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

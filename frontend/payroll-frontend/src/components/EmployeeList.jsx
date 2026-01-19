@@ -8,13 +8,14 @@ import { useSettings } from '../context/SettingsContext';
 /**
  * EmployeeList Component
  * Displays all employees in a table format with actions
- * Requirements: 7.2, 7.6, 8.5
+ * Requirements: 7.2, 7.6, 8.5, 2.4, 4.1, 4.2, 4.3
  * 
  * Features:
  * - Table display of all employees
  * - Edit and delete actions
  * - Loading and error states with retry
- * - Search/filter functionality
+ * - Search/filter functionality with responsive behavior
+ * - Mobile-optimized search input with proper touch targets
  */
 const EmployeeList = ({ onEdit, onAddNew, refreshTrigger }) => {
   const { formatCurrency } = useSettings();
@@ -26,6 +27,46 @@ const EmployeeList = ({ onEdit, onAddNew, refreshTrigger }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isRetrying, setIsRetrying] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  // Responsive behavior hook - Requirements 2.4, 4.1, 4.2
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Get responsive styles based on screen size - Requirements 2.4, 4.1, 4.2, 4.3
+  const getResponsiveStyles = () => {
+    const isMobile = windowWidth <= 640;
+    const isTablet = windowWidth > 640 && windowWidth <= 1024;
+    
+    return {
+      input: {
+        minHeight: isMobile ? '44px' : '48px', // Touch target adequacy - Requirements 4.3
+        fontSize: isMobile ? '16px' : '14px', // Prevent zoom on iOS - Requirements 4.1
+        width: '100%'
+      },
+      icon: {
+        width: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.25rem',
+        height: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.25rem',
+        left: isMobile ? '0.75rem' : isTablet ? '0.875rem' : '1rem'
+      },
+      button: {
+        minHeight: isMobile ? '44px' : '48px', // Touch target adequacy - Requirements 4.3
+        fontSize: isMobile ? '16px' : '14px',
+        width: isMobile ? '100%' : 'auto'
+      }
+    };
+  };
 
   // Fetch employees on mount and when refreshTrigger changes
   useEffect(() => {
@@ -103,25 +144,40 @@ const EmployeeList = ({ onEdit, onAddNew, refreshTrigger }) => {
 
   return (
     <div>
-      {/* Header with search and add button */}
+      {/* Header with search and add button - Enhanced responsive behavior */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="relative flex-1 max-w-md">
+        {/* Search input container with responsive adjustments - Requirements 2.4, 4.1, 4.2 */}
+        <div className="input-icon-container flex-1 w-full sm:max-w-md">
           <input
             type="text"
             placeholder="Search employees..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input-field pl-10"
+            className="input-field input-with-icon input-field-with-states w-full"
+            style={getResponsiveStyles().input}
           />
-          <svg className="absolute left-3 top-2.5 w-5 h-5 text-[#F8F8F8]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg 
+            className="input-icon" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+            style={getResponsiveStyles().icon}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
+        {/* Add Employee button with responsive sizing */}
         <button
           onClick={onAddNew}
-          className="btn-primary flex items-center"
+          className="btn-primary flex items-center w-full sm:w-auto justify-center sm:justify-start"
+          style={getResponsiveStyles().button}
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg 
+            className="w-5 h-5 mr-2" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           Add Employee
@@ -164,18 +220,18 @@ const EmployeeList = ({ onEdit, onAddNew, refreshTrigger }) => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[#FFFFFF]/[0.08]">
-                  <th className="table-header">Employee</th>
-                  <th className="table-header">Base Salary</th>
-                  <th className="table-header">Allowance</th>
-                  <th className="table-header">Deduction</th>
-                  <th className="table-header">Net Salary</th>
-                  <th className="table-header text-right">Actions</th>
+                  <th className="table-header table-col-employee">Employee</th>
+                  <th className="table-header text-center table-col-currency">Base Salary</th>
+                  <th className="table-header text-center table-col-currency">Allowance</th>
+                  <th className="table-header text-center table-col-currency">Deduction</th>
+                  <th className="table-header text-center table-col-currency">Net Salary</th>
+                  <th className="table-header text-center table-col-actions">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#FFFFFF]/[0.08]">
                 {filteredEmployees.map((employee) => (
                   <tr key={employee.id} className="table-row">
-                    <td className="table-cell">
+                    <td className="table-cell table-col-employee">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-[#5DD62C]/20 to-[#337418]/10 rounded-full flex items-center justify-center shadow-lg">
                           <span className="text-[#5DD62C] font-medium">
@@ -188,19 +244,19 @@ const EmployeeList = ({ onEdit, onAddNew, refreshTrigger }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="table-cell">
+                    <td className="table-cell text-center table-col-currency">
                       {formatCurrency(employee.baseSalary)}
                     </td>
-                    <td className="table-cell text-[#5DD62C] font-medium">
+                    <td className="table-cell text-center text-[#5DD62C] font-medium table-col-currency">
                       +{formatCurrency(employee.allowance)}
                     </td>
-                    <td className="table-cell text-red-400 font-medium">
+                    <td className="table-cell text-center text-red-400 font-medium table-col-currency">
                       -{formatCurrency(employee.deduction)}
                     </td>
-                    <td className="table-cell font-semibold text-[#F8F8F8]">
+                    <td className="table-cell text-center font-semibold text-[#F8F8F8] table-col-currency">
                       {formatCurrency(employee.netSalary)}
                     </td>
-                    <td className="table-cell text-right">
+                    <td className="table-cell text-center table-col-actions">
                       <button
                         onClick={() => onEdit(employee)}
                         className="text-[#5DD62C] hover:text-[#5DD62C]/80 transition-all duration-200 p-2 rounded-lg hover:bg-[#5DD62C]/10 transform hover:scale-110"

@@ -378,8 +378,8 @@ describe('Comprehensive Frontend-Backend Integration Tests', () => {
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith('/payroll/emp123');
         expect(screen.getByText('December 2024')).toBeInTheDocument();
-        expect(screen.getByText('$55,000')).toBeInTheDocument(); // Gross salary
-        expect(screen.getByText('$53,000')).toBeInTheDocument(); // Net salary
+        expect(screen.getByText('₹55,000')).toBeInTheDocument(); // Gross salary
+        expect(screen.getByText('₹53,000')).toBeInTheDocument(); // Net salary
       });
     });
   });

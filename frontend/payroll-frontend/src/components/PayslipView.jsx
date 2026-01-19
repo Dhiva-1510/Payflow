@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
+import { generatePayslipPDF } from '../utils/pdfGenerator';
 
 /**
  * PayslipView Component
@@ -12,6 +14,7 @@ import { useSettings } from '../context/SettingsContext';
  */
 const PayslipView = ({ payslip, onClose }) => {
   const { formatCurrency } = useSettings();
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   
   if (!payslip) return null;
 
@@ -29,6 +32,19 @@ const PayslipView = ({ payslip, onClose }) => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const handleDownloadPDF = async () => {
+    try {
+      setIsGeneratingPDF(true);
+      await generatePayslipPDF(payslip, formatCurrency);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      // You could add a toast notification here
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   return (
@@ -132,7 +148,26 @@ const PayslipView = ({ payslip, onClose }) => {
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 border-t border-[#FFFFFF]/[0.08] flex justify-end">
+        <div className="px-6 py-4 border-t border-[#FFFFFF]/[0.08] flex justify-between">
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isGeneratingPDF}
+            className="px-4 py-2 text-sm font-medium text-[#F8F8F8] bg-[#5DD62C]/20 hover:bg-[#5DD62C]/30 border border-[#5DD62C]/50 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isGeneratingPDF ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#5DD62C] mr-2"></div>
+                Generating...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+              </>
+            )}
+          </button>
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-[#0F0F0F] bg-[#5DD62C] hover:bg-[#5DD62C]/90 rounded-lg transition-colors"

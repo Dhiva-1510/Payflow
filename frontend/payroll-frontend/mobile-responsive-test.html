@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Responsive Input Test</title>
+    <style>
+        /* Import the enhanced CSS styles */
+        @import url('./src/index.css');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #0F0F0F;
+            color: #F8F8F8;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #202020;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .test-section {
+            margin-bottom: 32px;
+        }
+        
+        .test-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #5DD62C;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(248, 248, 248, 0.8);
+            margin-bottom: 8px;
+        }
+        
+        .input-icon-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-currency-symbol {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 1;
+            font-size: 0.875rem;
+            color: rgba(248, 248, 248, 0.4);
+        }
+        
+        .input-with-currency {
+            padding-left: calc(1.5rem + 0.5rem);
+            padding-right: 1rem;
+            position: relative;
+        }
+        
+        .input-field-with-states {
+            width: 100%;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            background-color: #0F0F0F;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #F8F8F8;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .input-field-with-states::placeholder {
+            color: rgba(248, 248, 248, 0.4);
+        }
+        
+        .input-field-with-states:focus {
+            outline: none;
+            border-color: rgba(93, 214, 44, 0.5);
+            box-shadow: 0 0 0 2px rgba(93, 214, 44, 0.2);
+        }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 640px) {
+            .input-with-currency,
+            .input-field-with-states {
+                min-height: 44px;
+                font-size: 1rem;
+            }
+            
+            .input-with-currency {
+                padding-left: calc(1.25rem + 0.5rem);
+            }
+            
+            .input-currency-symbol {
+                left: 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        .grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        
+        @media (min-width: 768px) {
+            .md\\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        
+        .viewport-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(93, 214, 44, 0.9);
+            color: #0F0F0F;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="viewport-info" id="viewportInfo">
+        Viewport: <span id="viewportSize"></span>
+    </div>
+    
+    <div class="test-container">
+        <h1 style="text-align: center; margin-bottom: 32px; color: #5DD62C;">Mobile Responsive Input Test</h1>
+        
+        <div class="test-section">
+            <div class="test-title">Currency Input Fields - Mobile Responsive</div>
+            <p style="color: rgba(248, 248, 248, 0.6); margin-bottom: 24px;">
+                Test the mobile responsive behavior by resizing your browser window or using device emulation.
+                On mobile (≤640px), inputs should have 44px minimum height and adjusted spacing.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3">
+                <div class="form-group">
+                    <label class="form-label">Base Salary *</label>
+                    <div class="input-icon-container">
+                        <span class="input-currency-symbol">₹</span>
+                        <input
+                            type="number"
+                            name="baseSalary"
+                            placeholder="0.00"
+                            step="0.01"
+                            min="0"
+                            class="input-with-currency input-field-with-states"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Allowance</label>
+                    <div class="input-icon-container">
+                        <span class="input-currency-symbol">₹</span>
+                        <input
+                            type="number"
+                            name="allowance"
+                            placeholder="0.00"
+                            step="0.01"
+                            min="0"
+                            class="input-with-currency input-field-with-states"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Deduction</label>
+                    <div class="input-icon-container">
+                        <span class="input-currency-symbol">₹</span>
+                        <input
+                            type="number"
+                            name="deduction"
+                            placeholder="0.00"
+                            step="0.01"
+                            min="0"
+                            class="input-with-currency input-field-with-states"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">Test Instructions</div>
+            <ul style="color: rgba(248, 248, 248, 0.8); line-height: 1.6;">
+                <li><strong>Desktop (>1024px):</strong> 3-column grid, 48px input height, standard spacing</li>
+                <li><strong>Tablet (641px-1024px):</strong> 3-column grid, 48px input height, medium spacing</li>
+                <li><strong>Mobile (≤640px):</strong> 1-column grid, 44px input height, compact spacing</li>
+                <li><strong>Touch Test:</strong> On mobile devices, inputs should be easily tappable</li>
+                <li><strong>Currency Symbol:</strong> Should remain visible and properly positioned at all sizes</li>
+                <li><strong>Focus State:</strong> Should work properly without breaking layout</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">Long Value Test</div>
+            <p style="color: rgba(248, 248, 248, 0.6); margin-bottom: 16px;">
+                Test with long currency values to ensure no overlap:
+            </p>
+            <div class="form-group">
+                <label class="form-label">Long Value Test</label>
+                <div class="input-icon-container">
+                    <span class="input-currency-symbol">₹</span>
+                    <input
+                        type="number"
+                        value="12345678.99"
+                        class="input-with-currency input-field-with-states"
+                        readonly
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const size = document.getElementById('viewportSize');
+            
+            let category = '';
+            if (width <= 640) {
+                category = 'Mobile';
+            } else if (width <= 1024) {
+                category = 'Tablet';
+            } else {
+                category = 'Desktop';
+            }
+            
+            size.textContent = `${width}x${height} (${category})`;
+        }
+        
+        // Update viewport info on load and resize
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+        
+        // Add some interactivity to test focus states
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                console.log('Input focused:', this.name);
+            });
+            
+            input.addEventListener('input', function() {
+                console.log('Input value changed:', this.name, this.value);
+            });
+        });
+    </script>
+</body>
+</html>

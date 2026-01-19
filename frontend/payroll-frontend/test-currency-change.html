@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Change Test</title>
+</head>
+<body>
+    <h1>Currency Change Test</h1>
+    <div id="output"></div>
+    
+    <script type="module">
+        // Clear any existing localStorage settings
+        localStorage.clear();
+        
+        // Import the currency utility (this would need to be adapted for actual browser use)
+        // For now, let's simulate the key functions
+        
+        const CURRENCIES = {
+            USD: { name: 'US Dollar', symbol: '$', rate: 1.0 },
+            EUR: { name: 'Euro', symbol: '€', rate: 0.85 },
+            GBP: { name: 'British Pound', symbol: '£', rate: 0.73 },
+            JPY: { name: 'Japanese Yen', symbol: '¥', rate: 110.0 },
+            INR: { name: 'Indian Rupee', symbol: '₹', rate: 74.5 },
+            CAD: { name: 'Canadian Dollar', symbol: 'C$', rate: 1.25 },
+            AUD: { name: 'Australian Dollar', symbol: 'A$', rate: 1.35 },
+            CHF: { name: 'Swiss Franc', symbol: 'CHF', rate: 0.92 }
+        };
+        
+        const getUserCurrency = () => {
+            try {
+                const settings = localStorage.getItem('userSettings');
+                if (settings) {
+                    const parsed = JSON.parse(settings);
+                    return parsed.currency || 'INR';
+                }
+            } catch (error) {
+                console.error('Error getting user currency:', error);
+            }
+            return 'INR';
+        };
+        
+        const formatCurrency = (amount, currency = null) => {
+            const targetCurrency = currency || getUserCurrency();
+            const currencyInfo = CURRENCIES[targetCurrency] || CURRENCIES.INR;
+            
+            try {
+                const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: targetCurrency,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+                
+                return formatter.format(amount || 0);
+            } catch (error) {
+                const formattedAmount = (amount || 0).toLocaleString('en-US');
+                return `${currencyInfo.symbol}${formattedAmount}`;
+            }
+        };
+        
+        // Test the currency formatting
+        const output = document.getElementById('output');
+        
+        output.innerHTML = `
+            <h2>Test Results:</h2>
+            <p><strong>Default Currency:</strong> ${getUserCurrency()}</p>
+            <p><strong>Format 1000:</strong> ${formatCurrency(1000)}</p>
+            <p><strong>Format 50000:</strong> ${formatCurrency(50000)}</p>
+            <p><strong>Format 1000 (USD):</strong> ${formatCurrency(1000, 'USD')}</p>
+            <p><strong>Format 1000 (INR):</strong> ${formatCurrency(1000, 'INR')}</p>
+            
+            <h3>Expected Results:</h3>
+            <p>Default Currency should be: INR</p>
+            <p>Format 1000 should show: ₹1,000 (or similar INR format)</p>
+            <p>Format 50000 should show: ₹50,000 (or similar INR format)</p>
+        `;
+    </script>
+</body>
+</html>

@@ -368,40 +368,7 @@ const AccountSettings = () => {
                   </div>
                 </div>
 
-                {/* Appearance Settings */}
-                <div>
-                  <h3 className="text-md font-medium text-[#F8F8F8] mb-4">Appearance</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="form-label">Theme</label>
-                      <select
-                        value={localSettings.theme}
-                        onChange={(e) => setLocalSettings(prev => ({ ...prev, theme: e.target.value }))}
-                        className="input-field"
-                      >
-                        <option value="dark">Dark</option>
-                        <option value="light">Light</option>
-                        <option value="auto">Auto (System)</option>
-                      </select>
-                    </div>
 
-                    <div>
-                      <label className="form-label">Language</label>
-                      <select
-                        value={localSettings.language}
-                        onChange={(e) => setLocalSettings(prev => ({ ...prev, language: e.target.value }))}
-                        className="input-field"
-                      >
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                        <option value="ja">Japanese</option>
-                        <option value="hi">Hindi</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Notification Settings */}
                 <div>

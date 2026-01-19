@@ -298,7 +298,7 @@ describe('Complete Frontend-Backend Integration Tests', () => {
         expect(mockedAxios.get).toHaveBeenCalledWith('/employee');
         expect(screen.getByText('John Employee')).toBeInTheDocument();
         expect(screen.getByText('john@company.com')).toBeInTheDocument();
-        expect(screen.getByText('$75,000')).toBeInTheDocument();
+        expect(screen.getByText('₹75,000')).toBeInTheDocument();
       });
 
       // Test employee update functionality (Requirement 2.3)
@@ -407,8 +407,8 @@ describe('Complete Frontend-Backend Integration Tests', () => {
       });
 
       // Verify payroll calculations are displayed correctly
-      expect(screen.getByText(/gross.*\$87,000/i)).toBeInTheDocument();
-      expect(screen.getByText(/net.*\$79,000/i)).toBeInTheDocument();
+      expect(screen.getByText(/gross.*₹87,000/i)).toBeInTheDocument();
+      expect(screen.getByText(/net.*₹79,000/i)).toBeInTheDocument();
     });
 
     test('should handle admin adding new employee with validation', async () => {
@@ -591,8 +591,8 @@ describe('Complete Frontend-Backend Integration Tests', () => {
         // Verify payroll records are displayed (Requirement 4.2)
         expect(screen.getByText('December 2024')).toBeInTheDocument();
         expect(screen.getByText('November 2024')).toBeInTheDocument();
-        expect(screen.getAllByText('$68,000')).toHaveLength(2); // Gross salary
-        expect(screen.getAllByText('$64,000')).toHaveLength(2); // Net salary
+        expect(screen.getAllByText('₹68,000')).toHaveLength(2); // Gross salary
+        expect(screen.getAllByText('₹64,000')).toHaveLength(2); // Net salary
       });
 
       // Test individual payslip viewing
@@ -601,11 +601,11 @@ describe('Complete Frontend-Backend Integration Tests', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/payslip for december 2024/i)).toBeInTheDocument();
-        expect(screen.getByText(/base salary.*\$60,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/allowance.*\$8,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/deduction.*\$4,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/gross salary.*\$68,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/net salary.*\$64,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/base salary.*₹60,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/allowance.*₹8,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/deduction.*₹4,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/gross salary.*₹68,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/net salary.*₹64,000/i)).toBeInTheDocument();
       });
     });
 
@@ -993,8 +993,8 @@ describe('Complete Frontend-Backend Integration Tests', () => {
       await waitFor(() => {
         expect(screen.getByText('Employee 1')).toBeInTheDocument();
         expect(screen.getByText('Employee 2')).toBeInTheDocument();
-        expect(screen.getByText('$60,000')).toBeInTheDocument();
-        expect(screen.getByText('$70,000')).toBeInTheDocument();
+        expect(screen.getByText('₹60,000')).toBeInTheDocument();
+        expect(screen.getByText('₹70,000')).toBeInTheDocument();
       });
 
       // Navigate away and back to verify state consistency
@@ -1012,8 +1012,8 @@ describe('Complete Frontend-Backend Integration Tests', () => {
         // Data should remain consistent
         expect(screen.getByText('Employee 1')).toBeInTheDocument();
         expect(screen.getByText('Employee 2')).toBeInTheDocument();
-        expect(screen.getByText('$60,000')).toBeInTheDocument();
-        expect(screen.getByText('$70,000')).toBeInTheDocument();
+        expect(screen.getByText('₹60,000')).toBeInTheDocument();
+        expect(screen.getByText('₹70,000')).toBeInTheDocument();
       });
     });
   });

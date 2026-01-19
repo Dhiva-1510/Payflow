@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Table Alignment Fix</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0F0F0F;
+            color: #F8F8F8;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .comparison-section {
+            margin-bottom: 40px;
+        }
+        
+        .status {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .status.before {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .status.after {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .table-container {
+            background-color: #202020;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Important for consistent column widths */
+        }
+        
+        .table-header {
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(248, 248, 248, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: rgba(15, 15, 15, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .table-header.center {
+            text-align: center;
+        }
+        
+        .table-cell {
+            padding: 16px 24px;
+            white-space: nowrap;
+            font-size: 14px;
+            color: #F8F8F8;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .table-cell.center {
+            text-align: center;
+        }
+        
+        .table-row:hover {
+            background-color: rgba(15, 15, 15, 0.5);
+        }
+        
+        /* BEFORE: No width constraints */
+        .table-before .table-header,
+        .table-before .table-cell {
+            width: auto;
+        }
+        
+        /* AFTER: Fixed width constraints for better alignment */
+        .table-after .table-col-employee {
+            width: auto;
+            min-width: 200px;
+        }
+        
+        .table-after .table-col-currency {
+            width: 120px;
+            min-width: 120px;
+            max-width: 120px;
+        }
+        
+        .table-after .table-col-actions {
+            width: 80px;
+            min-width: 80px;
+            max-width: 80px;
+        }
+        
+        .employee-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(93, 214, 44, 0.2), rgba(51, 116, 24, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            color: #5DD62C;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .employee-details {
+            min-width: 0; /* Allow text to truncate if needed */
+        }
+        
+        .employee-details h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #F8F8F8;
+        }
+        
+        .employee-details p {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(248, 248, 248, 0.6);
+        }
+        
+        .currency {
+            font-weight: 500;
+        }
+        
+        .positive {
+            color: #5DD62C;
+        }
+        
+        .negative {
+            color: #EF4444;
+        }
+        
+        .edit-btn {
+            color: #5DD62C;
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-btn:hover {
+            background-color: rgba(93, 214, 44, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .screen-size-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(93, 214, 44, 0.1);
+            color: #5DD62C;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(93, 214, 44, 0.3);
+            z-index: 1000;
+        }
+        
+        .summary-card {
+            background-color: #202020;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 24px;
+            margin-top: 40px;
+        }
+        
+        .code {
+            background-color: #0F0F0F;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #5DD62C;
+        }
+        
+        .highlight {
+            background-color: rgba(93, 214, 44, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #5DD62C;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .table-after .table-col-currency {
+                width: 100px;
+                min-width: 100px;
+                max-width: 100px;
+            }
+            
+            .table-after .table-col-actions {
+                width: 60px;
+                min-width: 60px;
+                max-width: 60px;
+            }
+            
+            .table-header,
+            .table-cell {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="screen-size-indicator" id="screenSize">
+        Screen: <span id="screenWidth"></span>px
+    </div>
+    
+    <div class="container">
+        <h1>Responsive Table Alignment Fix</h1>
+        <p>This demonstrates how the table alignment works across different screen sizes with proper column width constraints.</p>
+        
+        <!-- BEFORE -->
+        <div class="comparison-section">
+            <div class="status before">❌ BEFORE: No width constraints - poor alignment on wide screens</div>
+            <div class="table-container">
+                <table class="table-before">
+                    <thead>
+                        <tr>
+                            <th class="table-header">Employee</th>
+                            <th class="table-header center">Base Salary</th>
+                            <th class="table-header center">Allowance</th>
+                            <th class="table-header center">Deduction</th>
+                            <th class="table-header center">Net Salary</th>
+                            <th class="table-header center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row">
+                            <td class="table-cell">
+                                <div class="employee-info">
+                                    <div class="avatar">E</div>
+                                    <div class="employee-details">
+                                        <h4>emp002</h4>
+                                        <p>emp002@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="table-cell center currency">₹10</td>
+                            <td class="table-cell center currency positive">+₹0</td>
+                            <td class="table-cell center currency negative">-₹0</td>
+                            <td class="table-cell center currency">₹10</td>
+                            <td class="table-cell center">
+                                <button class="edit-btn">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">
+                                <div class="employee-info">
+                                    <div class="avatar">E</div>
+                                    <div class="employee-details">
+                                        <h4>emp001</h4>
+                                        <p>emp001@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="table-cell center currency">₹12</td>
+                            <td class="table-cell center currency positive">+₹0</td>
+                            <td class="table-cell center currency negative">-₹0</td>
+                            <td class="table-cell center currency">₹12</td>
+                            <td class="table-cell center">
+                                <button class="edit-btn">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 16px; font-size: 14px; color: #F8F8F8;">
+                <strong>Issues:</strong>
+                <ul style="margin: 8px 0; padding-left: 20px;">
+                    <li>Columns expand to fill available space</li>
+                    <li>Content appears left-aligned despite center CSS</li>
+                    <li>Poor visual balance on wide screens</li>
+                    <li>Inconsistent spacing between columns</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- AFTER -->
+        <div class="comparison-section">
+            <div class="status after">✅ AFTER: Fixed width constraints - perfect alignment on all screen sizes</div>
+            <div class="table-container">
+                <table class="table-after">
+                    <thead>
+                        <tr>
+                            <th class="table-header table-col-employee">Employee</th>
+                            <th class="table-header center table-col-currency">Base Salary</th>
+                            <th class="table-header center table-col-currency">Allowance</th>
+                            <th class="table-header center table-col-currency">Deduction</th>
+                            <th class="table-header center table-col-currency">Net Salary</th>
+                            <th class="table-header center table-col-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row">
+                            <td class="table-cell table-col-employee">
+                                <div class="employee-info">
+                                    <div class="avatar">E</div>
+                                    <div class="employee-details">
+                                        <h4>emp002</h4>
+                                        <p>emp002@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="table-cell center currency table-col-currency">₹10</td>
+                            <td class="table-cell center currency positive table-col-currency">+₹0</td>
+                            <td class="table-cell center currency negative table-col-currency">-₹0</td>
+                            <td class="table-cell center currency table-col-currency">₹10</td>
+                            <td class="table-cell center table-col-actions">
+                                <button class="edit-btn">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell table-col-employee">
+                                <div class="employee-info">
+                                    <div class="avatar">E</div>
+                                    <div class="employee-details">
+                                        <h4>emp001</h4>
+                                        <p>emp001@gmail.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="table-cell center currency table-col-currency">₹12</td>
+                            <td class="table-cell center currency positive table-col-currency">+₹0</td>
+                            <td class="table-cell center currency negative table-col-currency">-₹0</td>
+                            <td class="table-cell center currency table-col-currency">₹12</td>
+                            <td class="table-cell center table-col-actions">
+                                <button class="edit-btn">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 16px; font-size: 14px; color: #F8F8F8;">
+                <strong>Improvements:</strong>
+                <ul style="margin: 8px 0; padding-left: 20px;">
+                    <li>Fixed column widths: Currency (120px), Actions (80px)</li>
+                    <li>Content perfectly centered within constrained columns</li>
+                    <li>Consistent visual balance on all screen sizes</li>
+                    <li>Professional appearance with proper spacing</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="summary-card">
+            <h2>Technical Implementation</h2>
+            <p>The fix uses CSS <span class="code">table-layout: fixed</span> and specific column width constraints to ensure consistent alignment.</p>
+            
+            <h3 style="color: #5DD62C; margin-top: 20px;">CSS Classes Added:</h3>
+            <ul style="padding-left: 20px; line-height: 1.6;">
+                <li><span class="code">.table-col-employee</span> - Auto width with 200px minimum</li>
+                <li><span class="code">.table-col-currency</span> - Fixed 120px width for monetary values</li>
+                <li><span class="code">.table-col-actions</span> - Fixed 80px width for action buttons</li>
+            </ul>
+            
+            <h3 style="color: #5DD62C; margin-top: 20px;">Responsive Behavior:</h3>
+            <ul style="padding-left: 20px; line-height: 1.6;">
+                <li><strong>Desktop (>768px):</strong> Full width columns for optimal spacing</li>
+                <li><strong>Mobile (≤768px):</strong> Reduced column widths to fit smaller screens</li>
+                <li><strong>All sizes:</strong> Content remains perfectly centered</li>
+            </ul>
+            
+            <div style="margin-top: 20px; padding: 16px; background-color: rgba(93, 214, 44, 0.1); border-radius: 8px; border: 1px solid rgba(93, 214, 44, 0.3);">
+                <strong style="color: #5DD62C;">Try resizing your browser window</strong> to see how the table maintains perfect alignment across all screen sizes!
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function updateScreenSize() {
+            const width = window.innerWidth;
+            document.getElementById('screenWidth').textContent = width;
+            
+            let sizeCategory = '';
+            if (width <= 768) {
+                sizeCategory = ' (Mobile)';
+            } else if (width <= 1024) {
+                sizeCategory = ' (Tablet)';
+            } else {
+                sizeCategory = ' (Desktop)';
+            }
+            
+            document.getElementById('screenSize').innerHTML = `Screen: <span id="screenWidth">${width}px${sizeCategory}</span>`;
+        }
+        
+        // Update on load and resize
+        updateScreenSize();
+        window.addEventListener('resize', updateScreenSize);
+    </script>
+</body>
+</html>
+</text>

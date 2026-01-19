@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUser } from '../utils/tokenManager';
 import api from '../services/api';
 import { getErrorMessage, isRetryableError, getErrorUIType } from '../utils/errorHandler';
-import { ErrorMessage, EmployeeSalaryChart } from '../components';
+import { ErrorMessage, PayrollChart, YearSelector } from '../components';
 import { useSettings } from '../context/SettingsContext';
 
 /**
@@ -21,6 +21,8 @@ const EmployeeDashboard = () => {
   const user = getUser();
   const navigate = useNavigate();
   const { formatCurrency } = useSettings();
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [availableYears, setAvailableYears] = useState([]);
   const [stats, setStats] = useState({
     latestNet: '--',
     totalPayslips: '--',
@@ -28,12 +30,21 @@ const EmployeeDashboard = () => {
     loading: true
   });
   const [payrollRecords, setPayrollRecords] = useState([]);
+  const [filteredPayrollRecords, setFilteredPayrollRecords] = useState([]);
   const [error, setError] = useState(null);
   const [errorType, setErrorType] = useState('error');
 
   useEffect(() => {
     fetchDashboardStats();
   }, []);
+
+  // Filter payroll records by selected year
+  useEffect(() => {
+    if (payrollRecords.length > 0) {
+      const filtered = payrollRecords.filter(record => record.year === selectedYear);
+      setFilteredPayrollRecords(filtered);
+    }
+  }, [payrollRecords, selectedYear]);
 
   const fetchDashboardStats = async () => {
     try {
@@ -52,6 +63,28 @@ const EmployeeDashboard = () => {
           loading: false
         });
         setPayrollRecords(payrollRecords);
+        
+        // Extract available years from payroll records and ensure 2000-current range
+        const payrollYears = [...new Set(payrollRecords.map(record => record.year))];
+        const currentYear = new Date().getFullYear();
+        const allYears = [];
+        
+        // Generate years from 2000 to current year
+        for (let year = currentYear; year >= 2000; year--) {
+          allYears.push(year);
+        }
+        
+        // Merge with payroll years and remove duplicates
+        const combinedYears = [...new Set([...payrollYears, ...allYears])].sort((a, b) => b - a);
+        setAvailableYears(combinedYears);
+        
+        // Set selected year to the latest year with data, or current year if no data
+        if (payrollYears.length > 0) {
+          const latestDataYear = Math.max(...payrollYears);
+          setSelectedYear(latestDataYear);
+        } else {
+          setSelectedYear(currentYear);
+        }
       } else {
         setStats({
           latestNet: '--',
@@ -60,6 +93,16 @@ const EmployeeDashboard = () => {
           loading: false
         });
         setPayrollRecords([]);
+        setFilteredPayrollRecords([]);
+        
+        // Still provide full year range even with no data
+        const currentYear = new Date().getFullYear();
+        const allYears = [];
+        for (let year = currentYear; year >= 2000; year--) {
+          allYears.push(year);
+        }
+        setAvailableYears(allYears);
+        setSelectedYear(currentYear);
       }
     } catch (err) {
       console.error('Failed to fetch dashboard stats:', err);
@@ -164,10 +207,63 @@ const EmployeeDashboard = () => {
         </div>
       </div>
 
-      {/* Salary History Chart */}
-      <div className="bg-[#202020] rounded-xl border border-[#FFFFFF]/[0.08] p-6">
-        <h2 className="text-lg font-semibold text-[#F8F8F8] mb-6">Salary History</h2>
-        <EmployeeSalaryChart payrollData={payrollRecords} />
+      {/* Payroll History Charts */}
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h2 className="text-xl font-bold text-[#F8F8F8]">Payroll History</h2>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-[#F8F8F8]/60">Year:</span>
+            <YearSelector
+              selectedYear={selectedYear}
+              onYearChange={setSelectedYear}
+              availableYears={availableYears}
+              loading={stats.loading}
+              className="w-24"
+            />
+          </div>
+        </div>
+        
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Base Salary Chart */}
+          <PayrollChart 
+            payrollData={filteredPayrollRecords} 
+            type="baseSalary"
+            title="Base Salary"
+            color="#5DD62C"
+            chartType="line"
+          />
+          
+          {/* Allowance Chart */}
+          <PayrollChart 
+            payrollData={filteredPayrollRecords} 
+            type="allowance"
+            title="Allowance"
+            color="#10B981"
+            chartType="line"
+          />
+          
+          {/* Deduction Chart */}
+          <PayrollChart 
+            payrollData={filteredPayrollRecords} 
+            type="deduction"
+            title="Deduction"
+            color="#EF4444"
+            chartType="line"
+          />
+        </div>
+
+        {/* Net Salary Overview Chart - Bar Chart */}
+        <div className="bg-[#202020] rounded-xl border border-[#FFFFFF]/[0.08] p-6">
+          <h3 className="text-lg font-semibold text-[#F8F8F8] mb-6">Net Salary Overview - {selectedYear}</h3>
+          <PayrollChart 
+            payrollData={filteredPayrollRecords} 
+            type="netSalary"
+            title=""
+            color="#5DD62C"
+            chartType="bar"
+          />
+        </div>
       </div>
     </div>
   );

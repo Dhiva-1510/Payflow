@@ -17,19 +17,19 @@ export const CURRENCIES = {
 
 /**
  * Get user's preferred currency from localStorage
- * @returns {string} Currency code (default: USD)
+ * @returns {string} Currency code (default: INR)
  */
 export const getUserCurrency = () => {
   try {
     const settings = localStorage.getItem('userSettings');
     if (settings) {
       const parsed = JSON.parse(settings);
-      return parsed.currency || 'USD';
+      return parsed.currency || 'INR';
     }
   } catch (error) {
     console.error('Error getting user currency:', error);
   }
-  return 'USD';
+  return 'INR';
 };
 
 /**
@@ -70,9 +70,10 @@ export const convertCurrency = (amount, targetCurrency = 'USD') => {
  */
 export const formatCurrency = (amount, currency = null, options = {}) => {
   const targetCurrency = currency || getUserCurrency();
-  const currencyInfo = CURRENCIES[targetCurrency] || CURRENCIES.USD;
+  const currencyInfo = CURRENCIES[targetCurrency] || CURRENCIES.INR;
   
-  // Convert from USD if needed
+  // If currency is explicitly provided, don't convert (assume amount is already in that currency)
+  // If no currency provided, convert from USD to user's preferred currency
   const convertedAmount = currency ? amount : convertCurrency(amount, targetCurrency);
   
   const defaultOptions = {
@@ -105,7 +106,7 @@ export const formatCurrency = (amount, currency = null, options = {}) => {
  */
 export const formatCompactCurrency = (amount, currency = null) => {
   const targetCurrency = currency || getUserCurrency();
-  const currencyInfo = CURRENCIES[targetCurrency] || CURRENCIES.USD;
+  const currencyInfo = CURRENCIES[targetCurrency] || CURRENCIES.INR;
   const convertedAmount = currency ? amount : convertCurrency(amount, targetCurrency);
   
   if (convertedAmount >= 1000000000) {
@@ -126,7 +127,7 @@ export const formatCompactCurrency = (amount, currency = null) => {
  */
 export const getCurrencySymbol = (currency = null) => {
   const targetCurrency = currency || getUserCurrency();
-  return CURRENCIES[targetCurrency]?.symbol || '$';
+  return CURRENCIES[targetCurrency]?.symbol || '₹';
 };
 
 /**

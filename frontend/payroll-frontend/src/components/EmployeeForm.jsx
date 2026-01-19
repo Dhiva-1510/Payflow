@@ -225,7 +225,7 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
                 name="userId"
                 value={formData.userId}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 bg-[#0F0F0F] border rounded-lg text-[#F8F8F8] focus:outline-none focus:border-[#5DD62C]/50 focus:ring-1 focus:ring-[#5DD62C]/50 ${
+                className={`w-full px-4 py-3 min-h-[44px] sm:min-h-[48px] bg-[#0F0F0F] border rounded-lg text-[#F8F8F8] focus:outline-none focus:border-[#5DD62C]/50 focus:ring-1 focus:ring-[#5DD62C]/50 ${
                   fieldErrors.userId ? 'border-red-500' : 'border-[#FFFFFF]/[0.08]'
                 }`}
               >
@@ -244,7 +244,7 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
                   value={formData.userId}
                   onChange={handleChange}
                   placeholder="Enter User ID"
-                  className={`w-full px-4 py-3 bg-[#0F0F0F] border rounded-lg text-[#F8F8F8] placeholder-[#F8F8F8]/40 focus:outline-none focus:border-[#5DD62C]/50 focus:ring-1 focus:ring-[#5DD62C]/50 ${
+                  className={`w-full px-4 py-3 min-h-[44px] sm:min-h-[48px] bg-[#0F0F0F] border rounded-lg text-[#F8F8F8] placeholder-[#F8F8F8]/40 focus:outline-none focus:border-[#5DD62C]/50 focus:ring-1 focus:ring-[#5DD62C]/50 ${
                     fieldErrors.userId ? 'border-red-500' : 'border-[#FFFFFF]/[0.08]'
                   }`}
                 />
@@ -277,13 +277,13 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
         )}
 
         {/* Salary Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
           <div className="form-group">
             <label className="form-label">
               Base Salary *
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-3 text-[#F8F8F8]/40">$</span>
+            <div className="input-icon-container">
+              <span className="input-currency-symbol">₹</span>
               <input
                 type="number"
                 name="baseSalary"
@@ -292,7 +292,7 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className={`input-field pl-8 ${fieldErrors.baseSalary ? 'input-error' : ''}`}
+                className={`input-with-currency input-field-with-states min-h-[44px] sm:min-h-[48px] ${fieldErrors.baseSalary ? 'error' : ''}`}
               />
             </div>
             {fieldErrors.baseSalary && (
@@ -304,8 +304,8 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
             <label className="form-label">
               Allowance
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-3 text-[#F8F8F8]/40">$</span>
+            <div className="input-icon-container">
+              <span className="input-currency-symbol">₹</span>
               <input
                 type="number"
                 name="allowance"
@@ -314,7 +314,7 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className={`input-field pl-8 ${fieldErrors.allowance ? 'input-error' : ''}`}
+                className={`input-with-currency input-field-with-states min-h-[44px] sm:min-h-[48px] ${fieldErrors.allowance ? 'error' : ''}`}
               />
             </div>
             {fieldErrors.allowance && (
@@ -326,8 +326,8 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
             <label className="form-label">
               Deduction
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-3 text-[#F8F8F8]/40">$</span>
+            <div className="input-icon-container">
+              <span className="input-currency-symbol">₹</span>
               <input
                 type="number"
                 name="deduction"
@@ -336,7 +336,7 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className={`input-field pl-8 ${fieldErrors.deduction ? 'input-error' : ''}`}
+                className={`input-with-currency input-field-with-states min-h-[44px] sm:min-h-[48px] ${fieldErrors.deduction ? 'error' : ''}`}
               />
             </div>
             {fieldErrors.deduction && (
@@ -369,18 +369,18 @@ const EmployeeForm = ({ employee, onSuccess, onCancel }) => {
         </div>
 
         {/* Form Actions */}
-        <div className="flex justify-end space-x-4">
+        <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
           <button
             type="button"
             onClick={onCancel}
-            className="btn-secondary"
+            className="btn-secondary min-h-[44px] sm:min-h-auto w-full sm:w-auto"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className={`btn-primary ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`btn-primary min-h-[44px] sm:min-h-auto w-full sm:w-auto ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {loading && (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0F0F0F] mr-2"></div>

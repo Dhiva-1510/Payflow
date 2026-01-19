@@ -266,8 +266,8 @@ describe('Frontend End-to-End Integration Tests', () => {
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(`/payroll/${mockEmployee._id}`);
         expect(screen.getByText('December 2024')).toBeInTheDocument();
-        expect(screen.getByText('$55,000')).toBeInTheDocument(); // Gross salary
-        expect(screen.getByText('$53,000')).toBeInTheDocument(); // Net salary
+        expect(screen.getByText('₹55,000')).toBeInTheDocument(); // Gross salary
+        expect(screen.getByText('₹53,000')).toBeInTheDocument(); // Net salary
       });
     });
 
@@ -527,8 +527,8 @@ describe('Frontend End-to-End Integration Tests', () => {
         expect(mockedAxios.get).toHaveBeenCalledWith('/payroll/emp123');
         expect(screen.getByText('December 2024')).toBeInTheDocument();
         expect(screen.getByText('November 2024')).toBeInTheDocument();
-        expect(screen.getAllByText('$55,000')).toHaveLength(2); // Gross salary for both records
-        expect(screen.getAllByText('$53,000')).toHaveLength(2); // Net salary for both records
+        expect(screen.getAllByText('₹55,000')).toHaveLength(2); // Gross salary for both records
+        expect(screen.getAllByText('₹53,000')).toHaveLength(2); // Net salary for both records
       });
 
       // Step 4: View Individual Payslip
@@ -537,11 +537,11 @@ describe('Frontend End-to-End Integration Tests', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/payslip for december 2024/i)).toBeInTheDocument();
-        expect(screen.getByText(/base salary.*\$50,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/allowance.*\$5,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/deduction.*\$2,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/gross salary.*\$55,000/i)).toBeInTheDocument();
-        expect(screen.getByText(/net salary.*\$53,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/base salary.*₹50,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/allowance.*₹5,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/deduction.*₹2,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/gross salary.*₹55,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/net salary.*₹53,000/i)).toBeInTheDocument();
       });
     });
   });
@@ -979,8 +979,8 @@ describe('Frontend End-to-End Integration Tests', () => {
         // Data should be consistent
         expect(screen.getByText('Employee 1')).toBeInTheDocument();
         expect(screen.getByText('Employee 2')).toBeInTheDocument();
-        expect(screen.getByText('$50,000')).toBeInTheDocument();
-        expect(screen.getByText('$60,000')).toBeInTheDocument();
+        expect(screen.getByText('₹50,000')).toBeInTheDocument();
+        expect(screen.getByText('₹60,000')).toBeInTheDocument();
       });
     });
 
@@ -1084,7 +1084,7 @@ describe('Frontend End-to-End Integration Tests', () => {
         // UI should update immediately to show new employee
         expect(screen.getByText('New Employee')).toBeInTheDocument();
         expect(screen.getByText('new@test.com')).toBeInTheDocument();
-        expect(screen.getByText('$55,000')).toBeInTheDocument();
+        expect(screen.getByText('₹55,000')).toBeInTheDocument();
         expect(screen.queryByText(/no employees found/i)).not.toBeInTheDocument();
       });
     });

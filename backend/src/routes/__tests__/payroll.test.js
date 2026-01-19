@@ -264,4 +264,73 @@ describe('Payroll Routes', () => {
       expect(response.body.success).toBe(false);
     });
   });
+
+  describe('POST /api/payroll/run/:employeeId', () => {
+    it('should process payroll for individual employee (admin only)', async () => {
+      const response = await request(app)
+        .post(`/api/payroll/run/${testEmployee._id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ month: 11, year: 2024 })
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toContain('Payroll processed successfully');
+      expect(response.body.data.employee.name).toBe('Employee User');
+      expect(response.body.data.payroll.netSalary).toBe(53000);
+      expect(response.body.data.payroll.month).toBe(11);
+      expect(response.body.data.payroll.year).toBe(2024);
+    });
+
+    it('should prevent duplicate payroll for same employee and period', async () => {
+      // First payroll should succeed
+      await request(app)
+        .post(`/api/payroll/run/${testEmployee._id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ month: 11, year: 2024 })
+        .expect(200);
+
+      // Second payroll for same period should fail
+      const response = await request(app)
+        .post(`/api/payroll/run/${testEmployee._id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ month: 11, year: 2024 })
+        .expect(500);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toContain('Payroll already exists');
+    });
+
+    it('should require admin role for individual payroll processing', async () => {
+      const response = await request(app)
+        .post(`/api/payroll/run/${testEmployee._id}`)
+        .set('Authorization', `Bearer ${employeeToken}`)
+        .send({ month: 11, year: 2024 })
+        .expect(403);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toBe('Insufficient permissions - admin access required');
+    });
+
+    it('should validate required fields for individual payroll', async () => {
+      const response = await request(app)
+        .post(`/api/payroll/run/${testEmployee._id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({}) // Missing month and year
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toBe('Month and year are required');
+    });
+
+    it('should validate employee ID format', async () => {
+      const response = await request(app)
+        .post('/api/payroll/run/invalid-id')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ month: 11, year: 2024 })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toBe('Invalid employee ID format');
+    });
+  });
 });
