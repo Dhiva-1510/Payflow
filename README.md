@@ -66,6 +66,11 @@ payflow/
 - Payroll processing is simulated (no real payment gateway)
 - Designed for small to medium organizations
 
+## Flowchart
+<p align="center">
+  <img src="assest/flow.png" width="800" />
+</p>
+
   
 ## Getting Started
 
