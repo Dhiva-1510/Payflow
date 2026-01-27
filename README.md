@@ -49,6 +49,24 @@ payflow/
 - **Jest** - Testing framework
 - **@testing-library/react** - React testing utilities
 
+## Features
+
+- **User Authentication**: JWT-based authentication with role-based access
+- **Employee Management**: CRUD operations for employee records (Admin only)
+- **Payroll Processing**: Automated salary calculations and payroll generation
+- **Payroll History**: View payroll records with proper access control
+- **Responsive Design**: Clean, professional UI with Tailwind CSS
+- **Property-Based Testing**: Comprehensive testing with fast-check library
+
+## Roles
+- Admin: Manage employees, run payroll, view all payroll records
+- Employee: View personal payroll history and payslips
+
+## Limitations
+- Payroll processing is simulated (no real payment gateway)
+- Designed for small to medium organizations
+
+  
 ## Getting Started
 
 ### Prerequisites
@@ -70,29 +88,7 @@ npm install
 npm run dev
 ```
 
-### Environment Variables
 
-#### Backend (.env)
-```
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/payrolldb
-JWT_SECRET=supersecretkey
-```
-
-#### Frontend (.env)
-```
-VITE_API_BASE_URL=http://localhost:5000/api
-VITE_APP_NAME=PayFlow
-```
-
-## Features
-
-- **User Authentication**: JWT-based authentication with role-based access
-- **Employee Management**: CRUD operations for employee records (Admin only)
-- **Payroll Processing**: Automated salary calculations and payroll generation
-- **Payroll History**: View payroll records with proper access control
-- **Responsive Design**: Clean, professional UI with Tailwind CSS
-- **Property-Based Testing**: Comprehensive testing with fast-check library
 
 ## API Endpoints
 
